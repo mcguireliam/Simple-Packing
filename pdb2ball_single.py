@@ -53,70 +53,84 @@ def dist_Eur_array(array,origin):
 
 
 
-PDB_ori_path = './pdbfile/'
-pdb_dict = {}
+# PDB_ori_path = './pdbfile/'
 
-for file in os.listdir(PDB_ori_path):
-    if file != '.DS_Store':
+def pdb2ball_sinble(PDB_ori_path):
+    '''
 
-        # get pdb id of each protein
-        # print(file)
-        pdb_id = file[0:4]
+    :param PDB_ori_path: this is the path that save all the original pdb file
+    :return: return a dictionary 'pdb_dict', format as follows:
 
-        # get atom number of each protein, may be useful when calculating mass
-        atom_coord_array = get_coord_array(PDB_ori_path, file)
-        atom_number = len(atom_coord_array[0])
+            {
+                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                ...
+            }
 
-        # get center coordinate of each protein, this is the center of the boundary ball
-        xyz_coord_array = atom_coord_array.T
-        center = np.mean(xyz_coord_array, axis=1)
-        '''
-        atom_coord_array              xyz_coord_array
-           
-        [[x0,y0,z0],               [[x0,x1,x2, ... , xn],
-         [x1,y1,z1],       TO       [y0,y1,y2, ... , yn],
-             ... ,                  [z0,z1,z2, ... , zn]]
-         [xn,yn,zn]]
-    
-        '''
+    '''
+    pdb_dict = {}
+    for file in os.listdir(PDB_ori_path):
+        if file != '.DS_Store':
 
-        # get radius of the boundary ball
-        radius = dist_Eur_array(atom_coord_array, center)['maxdist']
+            # get pdb id of each protein
+            # print(file)
+            pdb_id = file[0:4]
 
-        tmp_dict = {}
-        tmp_dict['pdb_id'] = pdb_id
-        tmp_dict['atom_number'] = atom_number
-        tmp_dict['center'] = center
-        tmp_dict['radius'] = radius
-        '''
-        tmp_dict format:
-        
-        {   'pdbid': ****, 
-            'atom_number': ****, 
-            'center': ****, 
-            'radius': ****
-        }
-        '''
-        # print('pdb 2 single ball: DONE!\t', tmp_dict)
-        # print('==========================================\n\n\n')
+            # get atom number of each protein, may be useful when calculating mass
+            atom_coord_array = get_coord_array(PDB_ori_path, file)
+            atom_number = len(atom_coord_array[0])
 
-        # save in a pdb_dict
-        pdb_dict[file] = tmp_dict
-        '''
-        pdb_dict format:
+            # get center coordinate of each protein, this is the center of the boundary ball
+            xyz_coord_array = atom_coord_array.T
+            center = np.mean(xyz_coord_array, axis=1)
+            '''
+            atom_coord_array              xyz_coord_array
 
-        {
-            'protein1':  {'pdbid': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
-            'protein2':  {'pdbid': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
-            ...
-        }
-        '''
+            [[x0,y0,z0],               [[x0,x1,x2, ... , xn],
+             [x1,y1,z1],       TO       [y0,y1,y2, ... , yn],
+                 ... ,                  [z0,z1,z2, ... , zn]]
+             [xn,yn,zn]]
 
-    else:
-        pass
+            '''
 
+            # get radius of the boundary ball
+            radius = dist_Eur_array(atom_coord_array, center)['maxdist']
 
-# print the result
-dic_print = pprint.PrettyPrinter(indent=4)
-dic_print.pprint(pdb_dict)
-print('All File Done!')
+            tmp_dict = {}
+            tmp_dict['pdb_id'] = pdb_id
+            tmp_dict['atom_number'] = atom_number
+            tmp_dict['center'] = center
+            tmp_dict['radius'] = radius
+            '''
+            tmp_dict format:
+
+            {   'pdb_id': ****, 
+                'atom_number': ****, 
+                'center': ****, 
+                'radius': ****
+            }
+            '''
+            # print('pdb 2 single ball: DONE!\t', tmp_dict)
+            # print('==========================================\n\n\n')
+
+            # save in a pdb_dict
+            pdb_dict['protein_'+file[0:4]] = tmp_dict
+            '''
+            pdb_dict format:
+
+            {
+                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                ...
+            }
+            '''
+
+        else:
+            pass
+
+    # print the result
+    dic_print = pprint.PrettyPrinter(indent=4)
+    dic_print.pprint(pdb_dict)
+    print('All File Done!')
+
+    return pdb_dict
