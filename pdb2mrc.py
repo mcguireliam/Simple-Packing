@@ -1,3 +1,12 @@
+'''
+    the example of input is:
+    python pdb2mrc.py ./pdbfile ./mrcfile
+
+	This function will use eman2 package and call the following command:
+	e2pdb2mrc.py ./pdbfile/3hhb.pdb ./mrcfile/3hhb.mrc res=2.8 apix=1.0
+'''
+
+
 import os
 import sys
 
@@ -6,9 +15,6 @@ def pdb2mrc(pdbpath=os.getcwd(),mrcpath=os.getcwd(),res=2.8,apix=1.0):
 
 	read all the pdb files in pdbpath and conver them into mrc files.
 	the output files will be saved in mrcpath
-
-	the example command is:
-	e2pdb2mrc.py ./pdbfile/3hhb.pdb ./mrcfile/3hhb.mrc res=2.8 apix=1.0
 
 	:param pdbpath: the path of input file.
 	:param mrcpath: the path of output file
