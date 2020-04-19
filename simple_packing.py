@@ -8,7 +8,8 @@ import Bio
 
 def get_random_radius_list():
     '''get radius value randomly'''
-    p_d = pdb2ball_single.pdb2ball_sinble(".\\PDB_ori\\")
+    #p_d = pdb2ball_single.pdb2ball_sinble(".\\PDB_ori\\")
+    p_d = pdb2ball_single.pdb2ball_sinble(".\\pdbfile\\")
     r_s = []
     for protein in p_d:
         r_s.append(p_d[protein]['radius'])
