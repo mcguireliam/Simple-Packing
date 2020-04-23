@@ -10,7 +10,7 @@
 import os
 import sys
 
-def pdb2mrc(pdbpath=os.getcwd(),mrcpath=os.getcwd(),res=2.8,apix=1.0):
+def pdb2mrc(pdbpath='./pdbfile',mrcpath='./mrcfile',res=10.0,apix=3.0):
 	'''
 
 	read all the pdb files in pdbpath and conver them into mrc files.
