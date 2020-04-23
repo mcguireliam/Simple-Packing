@@ -3,7 +3,7 @@ import os
 from Bio.PDB.PDBParser import PDBParser
 import numpy as np
 import pprint
-
+import sys
 
 # get atom coord as an array
 def get_coord_array (path, file_name):
@@ -55,7 +55,7 @@ def dist_Eur_array(array,origin):
 
 # PDB_ori_path = './pdbfile/'
 
-def pdb2ball_sinble(PDB_ori_path):
+def pdb2ball_single(PDB_ori_path = './pdbfile/'):
     '''
 
     :param PDB_ori_path: this is the path that save all the original pdb file
@@ -82,7 +82,18 @@ def pdb2ball_sinble(PDB_ori_path):
 
             # get center coordinate of each protein, this is the center of the boundary ball
             xyz_coord_array = atom_coord_array.T
-            center = np.mean(xyz_coord_array, axis=1)
+            xyz_coord_min = np.min(xyz_coord_array, axis=1)
+            xyz_coord_max = np.max(xyz_coord_array, axis=1)
+            # print(xyz_coord_min)
+            # print(xyz_coord_max)
+            xcenter = 0.5 * (xyz_coord_min[0] + xyz_coord_max[0])
+            ycenter = 0.5 * (xyz_coord_min[1] + xyz_coord_max[1])
+            zcenter = 0.5 * (xyz_coord_min[2] + xyz_coord_max[2])
+            center_box =[xcenter,ycenter,zcenter]
+            # print (center_box)
+
+            # center = np.mean(xyz_coord_array, axis=1) # this center is not accurate
+
             '''
             atom_coord_array              xyz_coord_array
 
@@ -94,12 +105,12 @@ def pdb2ball_sinble(PDB_ori_path):
             '''
 
             # get radius of the boundary ball
-            radius = dist_Eur_array(atom_coord_array, center)['maxdist']
+            radius = dist_Eur_array(atom_coord_array, center_box)['maxdist']
 
             tmp_dict = {}
             tmp_dict['pdb_id'] = pdb_id
             tmp_dict['atom_number'] = atom_number
-            tmp_dict['center'] = center
+            tmp_dict['center'] = center_box
             tmp_dict['radius'] = radius
             '''
             tmp_dict format:
@@ -134,3 +145,9 @@ def pdb2ball_sinble(PDB_ori_path):
     print('All File Done!')
 
     return pdb_dict
+
+if __name__ == '__main__':
+    try:
+        pdb2ball_single(sys.argv[1])
+    except:
+        pdb2ball_single()
