@@ -4,6 +4,7 @@ from Bio.PDB.PDBParser import PDBParser
 import numpy as np
 import pprint
 import sys
+import math
 
 # get atom coord as an array
 def get_coord_array (path, file_name):
@@ -48,22 +49,23 @@ def dist_Eur_array(array,origin):
     maxdist = dist_array.max()
     dist_Eur_dic = {}
     dist_Eur_dic['dist_array'] = dist_array
-    dist_Eur_dic['maxdist'] = maxdist
+    dist_Eur_dic['maxdist'] = round(maxdist, 4)
     return dist_Eur_dic
 
 
 
 # PDB_ori_path = './pdbfile/'
 
-def pdb2ball_single(PDB_ori_path = './pdbfile/'):
+def pdb2ball_single(PDB_ori_path = './pdbfile/', show_log = 0):
+    print('start convert pdb file to single ball')
     '''
 
     :param PDB_ori_path: this is the path that save all the original pdb file
     :return: return a dictionary 'pdb_dict', format as follows:
 
             {
-                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
-                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
                 ...
             }
 
@@ -89,6 +91,9 @@ def pdb2ball_single(PDB_ori_path = './pdbfile/'):
             xcenter = 0.5 * (xyz_coord_min[0] + xyz_coord_max[0])
             ycenter = 0.5 * (xyz_coord_min[1] + xyz_coord_max[1])
             zcenter = 0.5 * (xyz_coord_min[2] + xyz_coord_max[2])
+            xcenter = round(xcenter, 4)
+            ycenter = round(ycenter, 4)
+            zcenter = round(ycenter, 4)
             center_box =[xcenter,ycenter,zcenter]
             # print (center_box)
 
@@ -110,8 +115,8 @@ def pdb2ball_single(PDB_ori_path = './pdbfile/'):
             tmp_dict = {}
             tmp_dict['pdb_id'] = pdb_id
             tmp_dict['atom_number'] = atom_number
-            tmp_dict['center'] = center_box
-            tmp_dict['radius'] = radius
+            tmp_dict['center'] = center_box,4
+            tmp_dict['radius'] = radius,4
             '''
             tmp_dict format:
 
@@ -125,26 +130,27 @@ def pdb2ball_single(PDB_ori_path = './pdbfile/'):
             # print('==========================================\n\n\n')
 
             # save in a pdb_dict
-            pdb_dict['protein_'+file[0:4]] = tmp_dict
+            pdb_dict[file[0:4]] = tmp_dict
             '''
             pdb_dict format:
 
             {
-                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
-                'protein_pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
+                'pdb_id':  {'pdb_id': ****, 'atom_number': ****, 'center': ****, 'radius': ****}
                 ...
             }
             '''
 
         else:
             pass
+    if show_log != 0:
+        # print the result
+        dic_print = pprint.PrettyPrinter(indent=4)
+        dic_print.pprint(pdb_dict)
 
-    # print the result
-    dic_print = pprint.PrettyPrinter(indent=4)
-    dic_print.pprint(pdb_dict)
-    print('All File Done!')
-
+    print('pdb 2 single ball: All File Done!\n\n')
     return pdb_dict
+
 
 if __name__ == '__main__':
     try:
