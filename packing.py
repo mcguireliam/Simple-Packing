@@ -38,11 +38,30 @@ def show_image(x,y,z):
     ax.set_xlabel('X')
     plt.show()
 
-def show_sum_img(sumlist):
+def show_sum_img(sumlist,protein_num):
+    ##process sumlist
+    newlist = process_sumlist(sumlist,protein_num)
     print('Show sum img')
     ax = plt.subplot()
-    ax.scatter(range(len(sumlist)), sumlist, alpha=0.5)
+    for line in range(protein_num):
+        ax.plot(newlist[500*line:500*(line+1)],label = 'protein'+str(line+1))
+    plt.legend()
+    plt.title('Loss of protein')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    
+    
+    #print('Length of sumlist is:',len(sumlist))
     plt.show()
+
+def process_sumlist(sumlist,protein_num):
+    newlist = [0 for _ in range(len(sumlist))]
+    for ii in range(len(sumlist)):
+        temp_remainder = ii%protein_num
+        temp_quotient = int((ii-temp_remainder)/protein_num)
+        newlist[temp_remainder*500+temp_quotient] = sumlist[ii]
+    return newlist
+        
 
 
 def initialization(radius_list, box_size = 5000, show_img = 0, show_log = 0):
@@ -125,7 +144,7 @@ def do_packing(radius_list, location, iteration = 10001, step = 1,  show_img = 0
             else:
                 if ii == (iteration-1):
                     show_image(x, y, z)
-                    show_sum_img(sum_list)
+                    show_sum_img(sum_list,len(radius_list))
 
         if show_log != 0:
             print('The coordinate of all the proteins center:')
