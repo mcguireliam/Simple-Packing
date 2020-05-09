@@ -3,8 +3,8 @@ a simple packing function that implements 'single ball model' and 'multiple-ball
 
 
 # including the following algorithm
-###### 1. using single sphere to model one macromolecule, packing using gradient descent.
+###### 1. packing_single_sphere: using single sphere to model one macromolecule, packing using gradient descent.
 
-###### 2. using multiple spheres to model one macromolecule, packing using gradient descent.
+###### 2. map_tomo: obtain density map of single macromolecule and merge them based on packing result, then convert to cryo-ET.
 
-###### 2. using single sphere to model one macromolecule, packing using MD.
+###### simu_subtomo.py: packing and obtain cryo-ET of several macromolecules, then get the subtomogram of the target macromolecule.
