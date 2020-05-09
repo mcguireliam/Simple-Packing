@@ -5,7 +5,6 @@ import json
 # set parameters for the simulation
 op = {
     'map':{'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'IOfile/pdbfile/', 'out_file':'/IOfile/map_single/situs_maps.pickle'},
-    #'map':{'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'/ldap_shared/home/v_sinuo_liu/mayan/simucode/pdbfile/', 'out_file':'situs_maps.pickle'},
     'tomo':{'model':{'missing_wedge_angle':30, 'SNR':500000000}, 'ctf':{'pix_size':1.0, 'Dz':-5.0, 'voltage':300, 'Cs':2.0, 'sigma':0.4}},
     'target_size':30
     }
