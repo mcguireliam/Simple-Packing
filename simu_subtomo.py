@@ -34,8 +34,8 @@ output = {
         'target':'IOfile/json/target{}.json'.format(num)}}
 
 # convert pdb to map
-import mergemap.pdb2map as PM
-import mergemap.iomap as IM
+import map_tomo.pdb2map as PM
+import map_tomo.iomap as IM
 ms = PM.pdb2map(op['map'])
 for n in ms:
     v = ms[n]
@@ -60,7 +60,7 @@ z0 = np.array(packing_result['optimal_result']['initialization'][2])/10
 box_size = packing_result['general_info']['box_size']/10
 
 # merge map to hugemap, save random angle in packing_result
-import mergemap.merge_map as MM
+import map_tomo.merge_map as MM
 initmap,init_angle_list = MM.merge_map(v, protein_name, x0, y0, z0, box_size)
 packmap,pack_angle_list = MM.merge_map(v, protein_name, x, y, z, box_size)
 packing_result['optimal_result']['initmap_rotate_angle'] = init_angle_list
@@ -76,7 +76,7 @@ IM.map2png(initmap, output['initmap']['png'])
 IM.map2png(packmap, output['packmap']['png'])
 
 # convert packmap to tomogram
-import mergemap.map2tomogram as MT
+import map_tomo.map2tomogram as MT
 tomo = MT.map2tomo(packmap, op['tomo'])
 IM.map2mrc(tomo, output['tomo']['mrc'])
 IM.map2png(tomo, output['tomo']['png'])
@@ -112,6 +112,6 @@ with open(output['json']['target'],'w') as f:
     json.dump(target_info, f, cls=MM.NumpyEncoder)
 
 # convert packmap & tomo to separate pictures
-import mergemap.mrc2singlepic as MS
+import map_tomo.mrc2singlepic as MS
 MS.mrc2singlepic(output['packmap']['mrc'], 'IOfile/packmap/png/packmap{}/'.format(num), 'packmap{}'.format(num))
 MS.mrc2singlepic(output['tomo']['mrc'], 'IOfile/tomo/png/tomo{}/'.format(num), 'tomo{}'.format(num))
