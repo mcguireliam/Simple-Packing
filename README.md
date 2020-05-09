@@ -7,4 +7,4 @@ a simple packing function that implements 'single ball model' and 'multiple-ball
 
 ###### 2. map_tomo: obtain density map of single macromolecule and merge them based on packing result, then convert to cryo-ET.
 
-###### simu_subtomo.py: packing and obtain cryo-ET of several macromolecules, then get the subtomogram of the target macromolecule.
+###### 3. simu_subtomo.py: packing and obtain cryo-ET of several macromolecules, then get the subtomogram of the target macromolecule.
