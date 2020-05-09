@@ -34,7 +34,7 @@ return trimmed_cub
 ```
 
 ```
-trim_target(hugemap, center, target_size = 30)
+
 return targetmap
 
 ```
