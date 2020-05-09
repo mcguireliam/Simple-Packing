@@ -42,7 +42,6 @@ for n in ms:
     IM.map2mrc(v, 'IOfile/map_single/{}.mrc'.format(n))
 
 # read density map from mrc
-# rootdir = '/IOfile/map_single/'
 rootdir = '/ldap_shared/home/v_sinuo_liu/Simple-Packing/IOfile/map_single'
 v = IM.readMrcMapDir(rootdir)
 
