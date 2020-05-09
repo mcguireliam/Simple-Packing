@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 import numpy as np
 import tomominer.simulation.reconstruction__simple_convolution as TSRSC
 
@@ -10,8 +12,8 @@ def map2tomo(map, op):
 
 if __name__ == '__main__':
     import iomap as IM
-    packmap=IM.readMrcMap('output/packmap/mrc/packmap2.mrc')
+    packmap=IM.readMrcMap('../IOfile/packmap/mrc/packmap1.mrc')
     vb = map2tomo(packmap, op)
-    IM.map2mrc(vb, 'IOfile/tomo/mrc/tomo_SNR04.mrc')
-    IM.map2png(vb, 'IOfile/tomo/png/tomo_SNR04.png')
+    IM.map2mrc(vb, '../IOfile/tomo/mrc/tomo_SNR04.mrc')
+    IM.map2png(vb, '../IOfile/tomo/png/tomo_SNR04.png')
 

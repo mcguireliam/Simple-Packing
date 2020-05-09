@@ -1,7 +1,7 @@
 import pdb2ball_single as P2B
 import random_select as RS
 import packing as PK
-import drawing as DR
+#import drawing as DR
 import pprint
 import sys
 
@@ -114,12 +114,12 @@ def packing_with_target(target_protein = '1bxn', random_protein_number = 4, iter
     # add back sum_list
     min_dict['sum_list'] = sum_list
 
-    # show image
-    if show_img != 0:
-        DR.show_center_img(min_dict['initialization'][0], min_dict['initialization'][1], min_dict['initialization'][2])
-        DR.show_center_img(min_dict['x'], min_dict['y'], min_dict['z'])
-        DR.show_sum_img(min_dict['sum_list'], len(radius_list), protein_name)
-        DR.get_packing_and_plot_ball(min_dict, boundary_shpere)
+    ## show image
+    #if show_img != 0:
+    #    DR.show_center_img(min_dict['initialization'][0], min_dict['initialization'][1], min_dict['initialization'][2])
+    #    DR.show_center_img(min_dict['x'], min_dict['y'], min_dict['z'])
+    #    DR.show_sum_img(min_dict['sum_list'], len(radius_list), protein_name)
+    #    DR.get_packing_and_plot_ball(min_dict, boundary_shpere)
 
 
     # save general information

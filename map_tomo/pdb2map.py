@@ -1,6 +1,8 @@
 '''
 This script converts pdb files to density maps
 '''
+import sys
+sys.path.append("..")
 
 op = {'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'../IOfile/pdbfile', 'out_file':'IOfile/map_single/situs_maps.pickle'}
 
@@ -27,11 +29,12 @@ if __name__ == '__main__':
     import iomap as IM
     for n in ms:
         v = ms[n]
-        IM.map2mrc(v, '../map_single/{}.mrc'.format(n))
+        IM.map2mrc(v, '../IOfile/map_single/{}.mrc'.format(n))
 
     data = {}
     i = 0
     for n in ms:
         data[i] = {n:ms[n]}
         i = i + 1
-    np.save('data.npy', data)
+    import numpy as np
+    np.save('../IOfile/map_single/data.npy', data)

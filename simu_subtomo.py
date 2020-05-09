@@ -4,7 +4,8 @@ import json
 
 # set parameters for the simulation
 op = {
-    'map':{'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'/IOfile/pdbfile', 'out_file':'IOfile/situs_maps.pickle'},
+    'map':{'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'IOfile/pdbfile/', 'out_file':'/IOfile/map_single/situs_maps.pickle'},
+    #'map':{'situs_pdb2vol_program':'/shared/opt/local/img/em/et/util/situs/Situs_2.7.2/bin/pdb2vol', 'spacing_s': [10.0], 'resolution_s':[10.0], 'pdb_dir':'/ldap_shared/home/v_sinuo_liu/mayan/simucode/pdbfile/', 'out_file':'situs_maps.pickle'},
     'tomo':{'model':{'missing_wedge_angle':30, 'SNR':500000000}, 'ctf':{'pix_size':1.0, 'Dz':-5.0, 'voltage':300, 'Cs':2.0, 'sigma':0.4}},
     'target_size':30
     }
@@ -39,16 +40,17 @@ import map_tomo.iomap as IM
 ms = PM.pdb2map(op['map'])
 for n in ms:
     v = ms[n]
-    IM.map2mrc(v, 'mapfile/{}.mrc'.format(n))
+    IM.map2mrc(v, 'IOfile/map_single/{}.mrc'.format(n))
 
 # read density map from mrc
-rootdir = '/IOfile/map_single'
+# rootdir = '/IOfile/map_single/'
+rootdir = '/ldap_shared/home/v_sinuo_liu/Simple-Packing/IOfile/map_single'
 v = IM.readMrcMapDir(rootdir)
 
 # get packing info
 import packing_single_sphere.simulate as SI
 target_name = '1bxn'
-packing_result = SI.packing_with_target(target_protein=target_name, random_protein_number=4)
+packing_result = SI.packing_with_target(target_protein=target_name, random_protein_number=4,PDB_ori_path = op['map']['pdb_dir'] )
 protein_name = packing_result['optimal_result']['pdb_id']
 x = packing_result['optimal_result']['x']/10
 y = packing_result['optimal_result']['y']/10

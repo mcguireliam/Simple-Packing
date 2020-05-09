@@ -1,6 +1,8 @@
 import mrcfile
 import numpy as np
 import os
+import sys
+sys.path.append("..")
 
 def map2mrc(map, file):
     with mrcfile.new(file, overwrite=True) as mrc:
@@ -15,9 +17,9 @@ def map2png(map, file):
     IIO.save_png(TIVU.cub_img(map)['im'], file)
 
 def readMrcMap(file):
-    with mrcfile.open(file) as mrc:
-        return mrc.data
-
+    if file.endswith(".mrc"):
+        with mrcfile.open(file) as mrc:
+            return mrc.data
 def readMrcMapDir(dir):
     # read density map in a dir
     list = os.listdir(dir)
@@ -26,6 +28,7 @@ def readMrcMapDir(dir):
         path = os.path.join(dir, list[i])
         if os.path.isfile(path):
             (filename, extension) = os.path.splitext(list[i])
-            with mrcfile.open(path) as mrc:
-                v[filename] = mrc.data
+            if path.endswith('.mrc'):
+                with mrcfile.open(path) as mrc:
+                    v[filename] = mrc.data
     return v
