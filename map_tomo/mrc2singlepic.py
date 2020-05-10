@@ -1,7 +1,12 @@
-import pickle
+import sys
 import numpy as N
 import os
-import mrcfile
+
+op = {'mrcfile': '../IOfile/tomo/mrc/tomo_SNR04.mrc',
+      'pngdir': '../IOfile/tomo/png/tomo2/SNR04/',
+      'pngname': 'SNR04',
+      'view_dir': 1}
+#view_dir =  0, 1, 2
 
 # convert a 3D cube to a 2D image of slices
 def cub_img(v, view_dir=2):
@@ -71,59 +76,29 @@ def save_png(m, name, normalize=True, verbose=False):
     import png  # in pypng package
     png.from_array(m, mode='L;16').save(name)
 
-def mrc2singlepic(mrcfile, pngdir, pngname='', view_dir=1):
+
+def mrc2singlepic(op):
     import iomap as IM
-    data = IM.readMrcMap(mrcfile)
-    if view_dir == 0:
+    data = IM.readMrcMap(op['mrcfile'])
+    if op['view_dir'] == 0:
         data = N.transpose(data, [1, 2, 0])
-    elif view_dir == 1:
+    elif op['view_dir'] == 1:
         data = N.transpose(data, [2, 0, 1])
-    elif view_dir == 2:
+    elif op['view_dir'] == 2:
         data = data
 
     shape = data.shape
     for j in range(shape[0]):
         d = data[j]
-        name = pngdir + pngname + '_' + str(j) + '.png'
-        if not os.path.exists(pngdir):
-            os.makedirs(pngdir)
+        name = op['pngdir'] + op['pngname'] + '_' + str(j) + '.png'
+        if not os.path.exists(op['pngdir']):
+            os.makedirs(op['pngdir'])
         save_png(d, name)
         print('save' + name)
 
-output = {
-    'initmap':{'mrc':'IOfile/initmap/mrc/initmap1.mrc','png':'IOfile/initmap/png/initmap1.png','trim':'IOfile/initmap/trim/initmap1T.mrc'},
-    'packmap':{'mrc':'IOfile/packmap/mrc/packmap1.mrc','png':'IOfile/packmap/png/packmap1.png','trim':'IOfile/packmap/trim/packmap1T.mrc'},
-    'tomo':{'mrc':'IOfile/tomo/mrc/tomo1.mrc','png':'IOfile/tomo/png/tomo1.png','trim':'IOfile/tomo/trim/tomo1T.mrc'},
-    'json':'IOfile/json/packing1.json'}
-
 if __name__ == '__main__':
-    # in_dirs = {'initmap':'output/initmap/mrc', 'packmap':'output/packmap/mrc', 'tomo':'output/tomo/mrc'}
-    # out_dirs = {'initmap':'output/initmap/png', 'packmap':'output/packmap/png', 'tomo':'output/tomo/png'}
-    # goal = 'packmap'
-    # rootdir = in_dirs[goal]
-    # list = os.listdir(rootdir) 
-    # for i in range(0,len(list)):
-    #     path = os.path.join(rootdir,list[i])
-    #     if os.path.isfile(path):
-    #         (filename, extension) = os.path.splitext(list[i])
-    #         with mrcfile.open(path) as mrc:
-    #             data = mrc.data
-    #             view_dir = 1
-    #             if view_dir == 0:
-    #                 data = N.transpose(data, [1, 2, 0])
-    #             elif view_dir == 1:
-    #                 data = N.transpose(data, [2, 0, 1])
-    #             elif view_dir == 2:
-    #                 data = data
+    try:
+        mrc2singlepic(sys.argv[1])
+    except:
+        mrc2singlepic(op)
 
-    #             shape = data.shape
-    #             for j in range(shape[0]):
-    #                 d = data[j]
-    #                 pngdir = out_dirs[goal] + '/' + filename
-    #                 pngname = pngdir + '/' + filename + '_' + str(j) + '.png'
-    #                 if not os.path.exists(pngdir):
-    #                     os.makedirs(pngdir)
-    #                 save_png(d, pngname)
-    #                 print ('save' + pngname)
-
-    mrc2singlepic('IOfile/tomo/mrc/tomo_SNR04.mrc', 'IOfile/tomo/png/tomo2/SNR04/', 'SNR04')

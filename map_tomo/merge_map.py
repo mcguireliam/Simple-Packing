@@ -1,23 +1,31 @@
-import tomominer.io.file as TIF
-import numpy as np
-import pickle
-import tomominer.simulation.reconstruction__simple_convolution as TSRSC
 import sys
 sys.path.append("..")
-#import aitom.model.util as MU
 import aitom.geometry.ang_loc as GAL
 import aitom.geometry.rotate as GR
-import os
 import json
+import numpy as np
 
 # set parameters for the simulation
-op = {'model':{'missing_wedge_angle':30, 'SNR':500000000}, 'ctf':{'pix_size':1.0, 'Dz':-5.0, 'voltage':300, 'Cs':2.0, 'sigma':0.4}}
+op = {'model':{'missing_wedge_angle':30,
+               'SNR':500000000},
+      'ctf':{'pix_size':1.0,
+             'Dz':-5.0,
+             'voltage':300,
+             'Cs':2.0,
+             'sigma':0.4}}
 num = 1
 output = {
-    'initmap':{'mrc':'../IOfile/initmap/mrc/initmap{}.mrc'.format(num),'png':'../IOfile/initmap/png/initmap{}.png'.format(num),'trim':'../IOfile/initmap/trim/initmap{}T.mrc'.format(num)},
-    'packmap':{'mrc':'../IOfile/packmap/mrc/packmap{}.mrc'.format(num),'png':'../IOfile/packmap/png/packmap{}.png'.format(num),'trim':'../IOfile/packmap/trim/packmap{}T.mrc'.format(num)},
-    'tomo':{'mrc':'../IOfile/tomo/mrc/tomo{}.mrc'.format(num),'png':'../IOfile/tomo/png/tomo{}.png'.format(num),'trim':'../IOfile/tomo/trim/tomo{}T.mrc'.format(num)},
-    'json':{'pack':'../IOfile/json/packing{}.json'.format(num), 'target':'../IOfile/json/target{}.json'.format(num)}}
+    'initmap':{'mrc':'../IOfile/initmap/mrc/initmap{}.mrc'.format(num),
+               'png':'../IOfile/initmap/png/initmap{}.png'.format(num),
+               'trim':'../IOfile/initmap/trim/initmap{}T.mrc'.format(num)},
+    'packmap':{'mrc':'../IOfile/packmap/mrc/packmap{}.mrc'.format(num),
+               'png':'../IOfile/packmap/png/packmap{}.png'.format(num),
+               'trim':'../IOfile/packmap/trim/packmap{}T.mrc'.format(num)},
+    'tomo':{'mrc':'../IOfile/tomo/mrc/tomo{}.mrc'.format(num),
+            'png':'../IOfile/tomo/png/tomo{}.png'.format(num),
+            'trim':'../IOfile/tomo/trim/tomo{}T.mrc'.format(num)},
+    'json':{'pack':'../IOfile/json/packing{}.json'.format(num),
+            'target':'../IOfile/json/target{}.json'.format(num)}}
 
 # randomly rotate and translate v
 def random_rotate(v):
@@ -111,53 +119,53 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()        
         return json.JSONEncoder.default(self, obj)
 
-if __name__ == '__main__':
-    # read density map from mrc
-    import mrcfile
-    import iomap as IM
-    rootdir = '../IOfile/map_single'
-    v = IM.readMrcMapDir(rootdir)
-
-    # get packing info
-    import sys
-    sys.path.append("..")
-    import packing_single_sphere.simulate as SI
-    import numpy as np
-    import packing_single_sphere.simulate as SI
-    target_name = '1bxn'
-    packing_result = SI.packing_with_target(target_protein=target_name, random_protein_number=4)
-    protein_name = packing_result['optimal_result']['pdb_id']
-    x = packing_result['optimal_result']['x']/10
-    y = packing_result['optimal_result']['y']/10
-    z = packing_result['optimal_result']['z']/10
-    print('initialization',packing_result['optimal_result']['initialization'])
-    x0 = np.array(packing_result['optimal_result']['initialization'][0])/10
-    y0 = np.array(packing_result['optimal_result']['initialization'][1])/10
-    z0 = np.array(packing_result['optimal_result']['initialization'][2])/10
-    box_size = packing_result['general_info']['box_size']/10
-
-    # merge map to hugemap, save random angle in packing_result
-    import map_tomo.merge_map as MM
-    initmap,init_angle_list = MM.merge_map(v, protein_name, x0, y0, z0, box_size)
-    packmap,pack_angle_list = MM.merge_map(v, protein_name, x, y, z, box_size)
-    packing_result['optimal_result']['initmap_rotate_angle'] = init_angle_list
-    packing_result['optimal_result']['packmap_rotate_angle'] = pack_angle_list
-    IM.map2mrc(initmap, output['initmap']['mrc'])
-    IM.map2mrc(packmap, output['packmap']['mrc'])
-    # save packing info
-    with open(output['json']['pack'],'w') as f:
-        json.dump(packing_result, f, cls=MM.NumpyEncoder)
-
-    # trim hugemap
-    trim_initmap = trim_margin(initmap)
-    trim_packmap = trim_margin(packmap)
-    print('initmap shape',initmap.shape)
-    print('trimmed shape',trim_initmap.shape)
-    print('packmap shape',packmap.shape)
-    print('trimmed shape',trim_packmap.shape)
-    IM.map2mrc(trim_initmap, output['initmap']['trim'])
-    IM.map2mrc(trim_packmap, output['packmap']['trim'])
-
-    # save huge/trim map to png
-    IM.map2png(initmap, output['initmap']['png'])
-    IM.map2png(packmap, output['packmap']['png'])
+# if __name__ == '__main__':
+#     # read density map from mrc
+#     import mrcfile
+#     import iomap as IM
+#     rootdir = '../IOfile/map_single'
+#     v = IM.readMrcMapDir(rootdir)
+#
+#     # get packing info
+#     import sys
+#     sys.path.append("..")
+#     import packing_single_sphere.simulate as SI
+#     import numpy as np
+#     import packing_single_sphere.simulate as SI
+#     target_name = '1bxn'
+#     packing_result = SI.packing_with_target(target_protein=target_name, random_protein_number=4)
+#     protein_name = packing_result['optimal_result']['pdb_id']
+#     x = packing_result['optimal_result']['x']/10
+#     y = packing_result['optimal_result']['y']/10
+#     z = packing_result['optimal_result']['z']/10
+#     print('initialization',packing_result['optimal_result']['initialization'])
+#     x0 = np.array(packing_result['optimal_result']['initialization'][0])/10
+#     y0 = np.array(packing_result['optimal_result']['initialization'][1])/10
+#     z0 = np.array(packing_result['optimal_result']['initialization'][2])/10
+#     box_size = packing_result['general_info']['box_size']/10
+#
+#     # merge map to hugemap, save random angle in packing_result
+#     import map_tomo.merge_map as MM
+#     initmap,init_angle_list = MM.merge_map(v, protein_name, x0, y0, z0, box_size)
+#     packmap,pack_angle_list = MM.merge_map(v, protein_name, x, y, z, box_size)
+#     packing_result['optimal_result']['initmap_rotate_angle'] = init_angle_list
+#     packing_result['optimal_result']['packmap_rotate_angle'] = pack_angle_list
+#     IM.map2mrc(initmap, output['initmap']['mrc'])
+#     IM.map2mrc(packmap, output['packmap']['mrc'])
+#     # save packing info
+#     with open(output['json']['pack'],'w') as f:
+#         json.dump(packing_result, f, cls=MM.NumpyEncoder)
+#
+#     # trim hugemap
+#     trim_initmap = trim_margin(initmap)
+#     trim_packmap = trim_margin(packmap)
+#     print('initmap shape',initmap.shape)
+#     print('trimmed shape',trim_initmap.shape)
+#     print('packmap shape',packmap.shape)
+#     print('trimmed shape',trim_packmap.shape)
+#     IM.map2mrc(trim_initmap, output['initmap']['trim'])
+#     IM.map2mrc(trim_packmap, output['packmap']['trim'])
+#
+#     # save huge/trim map to png
+#     IM.map2png(initmap, output['initmap']['png'])
+#     IM.map2png(packmap, output['packmap']['png'])

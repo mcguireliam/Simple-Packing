@@ -1,9 +1,9 @@
 import sys
 sys.path.append("..")
-import numpy as np
 import tomominer.simulation.reconstruction__simple_convolution as TSRSC
 
-op = {'model':{'missing_wedge_angle':30, 'SNR':0.4}, 'ctf':{'pix_size':1.0, 'Dz':-5.0, 'voltage':300, 'Cs':2.0, 'sigma':0.4}}
+op = {'model':{'missing_wedge_angle':30, 'SNR':0.4},
+      'ctf':{'pix_size':1.0, 'Dz':-5.0, 'voltage':300, 'Cs':2.0, 'sigma':0.4}}
 
 def map2tomo(map, op):
     vb = TSRSC.do_reconstruction(map, op, verbose=True)
