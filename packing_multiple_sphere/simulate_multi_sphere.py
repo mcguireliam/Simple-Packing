@@ -3,20 +3,28 @@ import sys
 sys.path.append("..")
 import pprint
 
+op_p2mb = { 'target_protein': '1bxn',
+            'PDB_ori_path': '../IOfile/pdbtest/',
+            'savepath' :'../IOfile/pdb_multi_sphere/',
+            'k_use' : 1,
+            'k' : 3,
+            'saveORnot' : 1,
+            'show_info': 1}
 
 
-def packing_with_target_mtsp(target_protein = '1bxn', random_protein_number = 4, PDB_ori_path='../IOfile/pdbtest/', savepath='../IOfile/pdb_multi_sphere/', k_use=1, k=3, saveORnot = 1, show_info = 1):
+
+
+def packing_with_target_mtsp( op_p2mb ):
 
     # convert pdb file into single ball and get the center and radius of this ball.
-    multi_sphere_info = P2BM.pdb2ball_multiple(PDB_ori_path=PDB_ori_path, savepath=savepath,
-                                             k_use = k_use, k = k, saveORnot = saveORnot, show_info = show_info)
+    multi_sphere_info = P2BM.pdb2ball_multiple(op_p2mb)
     dic_print = pprint.PrettyPrinter(indent=4)
     dic_print.pprint(multi_sphere_info)
 
     # set target protein
-    print('target protein is', target_protein,'\n\n')
+    print('target protein is', op_p2mb['target_protein'],'\n\n')
     protein_name = []
-    protein_name.append(target_protein)
+    protein_name.append(op_p2mb['target_protein'])
     sphere_list = []
     sphere_list.append(multi_sphere_info[protein_name[0]])
 
@@ -38,7 +46,7 @@ def packing_with_target_mtsp(target_protein = '1bxn', random_protein_number = 4,
 
 
 if __name__ == '__main__':
-    packing_with_target_mtsp()
+    packing_with_target_mtsp(op_p2mb)
 
 
 

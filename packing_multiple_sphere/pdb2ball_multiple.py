@@ -23,7 +23,7 @@ def k_vaues(atom_number):
         k = k_ori
     return k
 
-def get_center_and_radius(atom_coord_array, kmeans_result, k, savepath, save_filename, saveORnot = 1, show_info = 1):
+def get_center_and_radius(atom_coord_array, kmeans_result, save_filename, op_p2mb):
     '''
 
     :param atom_coord_array: the array of the coordinate of all atoms
@@ -53,15 +53,15 @@ def get_center_and_radius(atom_coord_array, kmeans_result, k, savepath, save_fil
 
     sphere_info = {}
     i = 0 # cent_id
-    while i < k:
-        # 输出每个聚类中心处，球的半径（距离该点最远的距离）
-        if show_info != 0:
+    while i < op_p2mb['k']:
+        # get cluster center and the radius of each sphere
+        if op_p2mb['show_info'] != 0:
             print('\ncluster number:', i)
             print('cluster_cent:', cluster_cent_array[i])
         cluster_array = get_cluster_data(atom_coord_array, kmeans_result, i)
         dist_array = pdb2ball_single.dist_Eur_array(cluster_array, cluster_cent_array[i])
         max_dist = dist_array['maxdist']
-        if show_info != 0:
+        if op_p2mb['show_info'] != 0:
             print('radius (max_distance):', max_dist)
 
         sphere_info[i] = {}
@@ -70,16 +70,16 @@ def get_center_and_radius(atom_coord_array, kmeans_result, k, savepath, save_fil
         sphere_info[i]['sphere_radius'] = max_dist
         sphere_info[i]['vmd_radius'] = (max_dist * 3) / 5 + 3
 
-        # 存储粗粒化 pdb 结果
-        if saveORnot != 0:
-            save_center2pdb(cluster_cent_array,i, savepath, save_filename)
+        # save pdb result of coarse graining result
+        if op_p2mb['saveORnot'] != 0:
+            save_center2pdb(cluster_cent_array,i,  op_p2mb['savepath'], save_filename)
 
         i = i + 1
-    if saveORnot != 0:
-        with open(savepath + save_filename + '_kmeans.pdb', 'a') as f:
+    if op_p2mb['saveORnot'] != 0:
+        with open( op_p2mb['savepath'] + save_filename + '_kmeans.pdb', 'a') as f:
             f.write('END\n')
-        if show_info != 0:
-            print("write file done", savepath, save_filename)
+        if op_p2mb['show_info'] != 0:
+            print("write file done",  op_p2mb['savepath'], save_filename)
 
     return sphere_info
 
@@ -91,7 +91,7 @@ def get_cluster_data(atom_coord_array, kmeans_result, cluster_id_number):
     :param cluster_id_number: int, the id of custer in kmeans_result. It is the same the id of spheres in a macromolecule
     :return: array. the atom coodrinates in a specific cluster
     '''
-    # 单独打印某个cluster
+    # obtain one cluster in a k-means result
     cluster_list = []
     for atom_coo, cluster_id in zip(atom_coord_array, kmeans_result.labels_):
         if cluster_id == cluster_id_number:
@@ -186,7 +186,7 @@ def draw_cluster(atom_coord_array, kmeans_result, k, scale, savepath, save_filen
         ax.scatter(x, y, z, s=scale, c=colorlist[i], alpha=0.3)
         i = i + 1
 
-    # 添加坐标轴(顺序是Z, Y, X)
+    # add axis
     ax.set_zlabel('Z', fontdict={'size': 15, 'color': 'red'})
     ax.set_ylabel('Y', fontdict={'size': 15, 'color': 'red'})
     ax.set_xlabel('X', fontdict={'size': 15, 'color': 'red'})
@@ -197,15 +197,23 @@ def draw_cluster(atom_coord_array, kmeans_result, k, scale, savepath, save_filen
     return True
 
 
-def pdb2ball_multiple(PDB_ori_path = '../IOfile/pdbtest/', savepath = '../IOfile/pdb_multi_sphere/', k_use = 1, k = 3, saveORnot = 1, show_info = 1):
+op_p2mb = { 'PDB_ori_path': '../IOfile/pdbtest/',
+            'savepath' :'../IOfile/pdb_multi_sphere/',
+            'k_use' : 1,
+            'k' : 3,
+            'saveORnot' : 1,
+            'show_info': 1}
+
+
+def pdb2ball_multiple(op_p2mb):
     '''
      the main function
 
     :param PDB_ori_path: this is the path that save all the original pdb file
     :param savepath: the path to save output figure and the simiplied pdb file
-    :param k_use: use calculated k or not? 1: calculated by atom number, 0: user define, all macromolecules will use the same k number
-    :param k: defaule k value
-    :return: the dictionary save the mulriple sphere info of a macromolecules.
+    :param k_use: use calculated k or not? 1: calculated by atom number, 0: user defined value, all macromolecules will use the same k number
+    :param k: defaule k value. if k_use = 0, then all the macromolecules will be devided into k spheres
+    :return: the dictionary save the multiple sphere info of a macromolecules.
             the format of output is:
 
             multi_sphere_info = {  '1f1b': {   0: {  'sphere_center': array([36.968, 47.965, -9.969], dtype=float32),
@@ -231,35 +239,33 @@ def pdb2ball_multiple(PDB_ori_path = '../IOfile/pdbtest/', savepath = '../IOfile
     '''
     multi_sphere_info = {}
     # read all pdb file in a path
-    for file in os.listdir(PDB_ori_path):
+    for file in os.listdir(op_p2mb['PDB_ori_path']):
         if file != '.DS_Store':
             print(file)
             save_filename = file[0:4]
             pdb_id = file[0:4]
 
             # get all atom coordinate
-            atom_coord_array = pdb2ball_single.get_coord_array(PDB_ori_path, file)
+            atom_coord_array = pdb2ball_single.get_coord_array(op_p2mb['PDB_ori_path'], file)
             atom_number = len(atom_coord_array)
 
             # calculate the value of k
-            if k_use == 1:
-                k = k_vaues(atom_number)
+            if op_p2mb['k_use'] == 1:
+                op_p2mb['k'] = k_vaues(atom_number)
             else:
                 pass
 
             # obtain k-means result
-            kmeans_result = KMeans(n_clusters=k).fit(atom_coord_array)
+            kmeans_result = KMeans(n_clusters = op_p2mb['k'] ).fit(atom_coord_array)
             print('k-means cluster DONE!')
 
-            cluster_cent_array = kmeans_result.cluster_centers_
-
             #get center and radius, then save as pdb file
-            sphere_info = get_center_and_radius(atom_coord_array, kmeans_result, k, savepath, save_filename, saveORnot = saveORnot, show_info= show_info)
+            sphere_info = get_center_and_radius(atom_coord_array, kmeans_result, save_filename,op_p2mb )
             multi_sphere_info[pdb_id] = sphere_info
 
             # draw figure
             scale = scale_value(len(atom_coord_array))
-            draw_cluster(atom_coord_array, kmeans_result, k, scale, savepath, save_filename)
+            draw_cluster(atom_coord_array, kmeans_result, op_p2mb['k'], scale, op_p2mb['savepath'], save_filename)
 
 
             print('file', file, 'done!')
@@ -272,5 +278,5 @@ def pdb2ball_multiple(PDB_ori_path = '../IOfile/pdbtest/', savepath = '../IOfile
 
 
 if __name__ == '__main__':
-    pdb2ball_multiple()
+    pdb2ball_multiple(op_p2mb)
 

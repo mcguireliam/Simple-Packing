@@ -1,10 +1,14 @@
+#workflow
+
+######run simu_subtomo.py, and a simulated subtomogram of a target macromolecule will obtained. 
+
+
 pdb2map
 
 ```
 pdb2map(op)
 return ms: dict of density map
 ```
-
 
 
 merge_map
@@ -66,14 +70,12 @@ return mrc.data
 ```
 
 
-
 map2tomogram
 
 ```
 map2tomo(map, op)
 return vb
 ```
-
 
 
 mrc2singlepic
