@@ -14,9 +14,16 @@ op = {
     'target_size':30
     }
 
+
 packing_op = {'target': '1bxn',
               'random_protein_number': 4,
-              'PDB_ori_path': op['map']['pdb_dir']}
+              'PDB_ori_path': op['map']['pdb_dir'],
+              'iteration':5001,
+              'step':1,
+              'show_img': 1,
+              'show_log': 1
+              }
+
 
 output = {
     'initmap':{

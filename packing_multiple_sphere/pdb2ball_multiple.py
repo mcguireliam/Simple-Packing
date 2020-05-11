@@ -10,6 +10,21 @@ sys.path.append("..")
 from packing_single_sphere import pdb2ball_single
 
 
+op_p2mb = { 'PDB_ori_path': '../IOfile/pdbtest/',
+            'savepath' :'../IOfile/pdb_multi_sphere/',
+            'k_use' : 1,
+            'k' : 3,
+            'saveORnot' : 1,
+            'show_info': 1}
+
+'''
+    :param PDB_ori_path: this is the path that save all the original pdb file
+    :param savepath: the path to save output figure and the simiplied pdb file
+    :param k_use: use calculated k or not? 1: calculated by atom number, 0: user defined value, all macromolecules will use the same k number
+    :param k: defaule k value. if k_use = 0, then all the macromolecules will be devided into k spheres
+    :return: the dictionary save the multiple sphere info of a macromolecules.
+'''
+
 def k_vaues(atom_number):
     '''
     :param atom_number: the atom number of each macromolecule
@@ -195,14 +210,6 @@ def draw_cluster(atom_coord_array, kmeans_result, k, scale, savepath, save_filen
     plt.show()
 
     return True
-
-
-op_p2mb = { 'PDB_ori_path': '../IOfile/pdbtest/',
-            'savepath' :'../IOfile/pdb_multi_sphere/',
-            'k_use' : 1,
-            'k' : 3,
-            'saveORnot' : 1,
-            'show_info': 1}
 
 
 def pdb2ball_multiple(op_p2mb):

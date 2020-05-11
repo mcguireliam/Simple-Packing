@@ -62,7 +62,7 @@ def packing_with_target(packing_op):
                     }
     '''
     # convert pdb file into single ball and get the center and radius of this ball.
-    boundary_shpere = P2B.pdb2ball_single(PDB_ori_path = packing_op['PDB_ori_path'], show_log = show_log)
+    boundary_shpere = P2B.pdb2ball_single(PDB_ori_path = packing_op['PDB_ori_path'], show_log = packing_op['show_log'])
 
     # set target protein
     if packing_op['show_log'] != 0:
@@ -94,7 +94,7 @@ def packing_with_target(packing_op):
         save_location = [tuple(location[0]),tuple(location[1]),tuple(location[2])]
         # print('init 1',location)
         # packing
-        dict = PK.do_packing(radius_list, location, iteration=packing_op['iteration'], step=packing_op['step'], show_log= packing_op['show_log'])
+        dict = PK.do_packing(radius_list, location, iteration = packing_op['iteration'], step = packing_op['step'], show_log = packing_op['show_log'])
         save_location = [list(save_location[0]), list(save_location[1]), list(save_location[2])]
         dict['initialization'] = save_location
         dict_out[i] = dict
