@@ -111,7 +111,7 @@ def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_to
     with open(output['json']['pack'],'w') as f:
         json.dump(packing_result, f, cls=MM.NumpyEncoder)
     # convert packmap to tomogram
-    import map2tomogram as MT
+    import map_tomo.map2tomogram as MT
     tomo = MT.map2tomo(packmap, op['tomo'])
 
 
@@ -161,7 +161,7 @@ def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_to
 
     if save_tomo_slice != 0:
         # convert packmap & tomo to separate pictures
-        import mrc2singlepic as MS
+        import map_tomo.mrc2singlepic as MS
         MS.mrc2singlepic(output['packmap']['mrc'], output['packmap']['png'] + 'packmap{}/'.format(num), 'packmap{}'.format(num))
         MS.mrc2singlepic(output['tomo']['mrc'], output['tomo']['png'] + 'tomo{}/'.format(num), 'tomo{}'.format(num))
 
