@@ -144,8 +144,9 @@ def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_to
     target_simu_tomo = {}
     target_simu_tomo['tomo'] = target_tomo
     target_simu_tomo['density_map'] = target_packmap
+    target_simu_tomo['info'] = target_info
 
-    return
+    return target_simu_tomo
 
 if __name__ == '__main__':
     try:
