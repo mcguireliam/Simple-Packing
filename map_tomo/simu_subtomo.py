@@ -52,6 +52,28 @@ output = {
         'target':'../IOfile/json/target{}.json'.format(num)}}
 
 def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_tomo_slice = 0):
+    '''
+
+    :param op: parameter of convert pdb/ density map to tomogram
+    :param packing_op: parameter of packing process
+    :param output: path of output file
+    :param save_tomo: 1 save, 0 not save, if the large subtomogram.mrc of the whole packing scene(including 5-10 macromolecules) will be saved
+    :param save_target:  1 save, 0 not save, if the subtomogram.mrc of the target will be saved
+    :param save_tomo_slice:  1 save, 0 not save, if the sliced image will be saved.
+    :return:
+
+        target_simu_tomo = { 'tomo' : subtomogram of target macromolecule, .mrc file
+                         'density_map': density map, .mrc file
+                         'info': {  'loc' : coordinate of target macromolecule
+                                    'rotate' : the rotation angle of this macromolecule (ZYZ, Euler angle)
+                                    'name' : the name of a macromolecule
+                                  }
+                        }
+
+        the json file of packing result and target will be saved in '../IOfile/json'
+    '''
+
+
     # convert pdb to map
     import pdb2map as PM
     import iomap as IM
@@ -132,6 +154,7 @@ def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_to
     target_info = {}
     target_info['loc'] = loc_r
     target_info['rotate'] = pack_angle_list[i]
+    target_info['name'] = packing_op['target']
     with open(output['json']['target'],'w') as f:
         json.dump(target_info, f, cls=MM.NumpyEncoder)
 

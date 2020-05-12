@@ -44,8 +44,8 @@ output = {
             'mrc':'IOfile/tomo/target/mrc/tomotarget{}.mrc'.format(num),
             'png':'IOfile/tomo/target/png/tomotarget{}.png'.format(num)}},
     'json':{
-        'pack':'../IOfile/json/packing{}.json'.format(num),
-        'target':'../IOfile/json/target{}.json'.format(num)}}
+        'pack':'IOfile/json/packing{}.json'.format(num),
+        'target':'IOfile/json/target{}.json'.format(num)}}
 
 target_simu_tomo = SS.simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_tomo_slice = 0)
 
@@ -54,6 +54,7 @@ target_simu_tomo = { 'tomo' : subtomogram of target macromolecule, .mrc file
                      'density_map': density map, .mrc file
                      'info': {  'loc' : coordinate of target macromolecule
                                 'rotate' : the rotation angle of this macromolecule (ZYZ, Euler angle)
+                                'name' : the name of a macromolecule
                               }
                     }
                     
