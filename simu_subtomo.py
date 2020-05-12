@@ -102,7 +102,7 @@ def simu_subtomo(op, packing_op, output, save_tomo = 0, save_target = 1, save_to
     box_size = packing_result['general_info']['box_size']/10
 
     # merge map to hugemap, save random angle in packing_result
-    import map_tomo as MM
+    import map_tomo.merge_map as MM
     initmap,init_angle_list = MM.merge_map(v, protein_name, x0, y0, z0, box_size)
     packmap,pack_angle_list = MM.merge_map(v, protein_name, x, y, z, box_size)
     packing_result['optimal_result']['initmap_rotate_angle'] = init_angle_list
