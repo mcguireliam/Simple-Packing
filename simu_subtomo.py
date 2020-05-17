@@ -3,6 +3,12 @@ import sys
 sys.path.append("..")
 import json
 
+'''
+if you want to run this file to generate only one subtomogram, please uncomment line 85-96 and comment line 97
+if you want to run file generate_simu_subtomo to generate a lot of data, please comment line85-96 and uncomment line 97. This will save time.
+'''
+
+
 # set parameters for the simulation
 
 num = 1
